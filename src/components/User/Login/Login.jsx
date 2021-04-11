@@ -34,8 +34,6 @@ const UserLogin = () => {
     const { user, password } = values;
 
     await handleLogin(user, password);
-
-    setValues(initialState);
   };
 
   return (

@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
-const StoreContent = createContext({
+const StoreContext = createContext({
     token: null,
     setToken: () => {},
     formErrors: []
 });
 
-export default StoreContent;
+export default StoreContext;
