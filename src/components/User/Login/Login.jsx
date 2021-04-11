@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UIButton from "components/UI/Button/Button";
 
 import "./Login.css";
@@ -6,21 +6,19 @@ import StoreContext from "components/Store/Context";
 import { useHistory } from "react-router";
 
 function initialState() {
-  return { user: "", password: "" };
+  return { user: "user@scopic-auction.com", password: "password" };
 }
-
-function login({ user, password }) {
-  if (user === 'admin@admin.com' && password === 'admin') {
-    return { token: '1234' };
-  }
-  return { error: 'Usuário ou senha inválido' };
-}
-
 
 const UserLogin = () => {
   const [values, setValues] = useState(initialState());
-  const { setToken } = useContext(StoreContext);
+  const { token, handleLogin } = useContext(StoreContext);
   const history = useHistory();
+
+  useEffect(() => {
+    if (token) {
+      return history.push('/');
+    }
+  })
 
   function onChange(event) {
     const { value, name } = event.target;
@@ -30,15 +28,12 @@ const UserLogin = () => {
     });
   };
 
-  function onSubmit(event) {
+  async function onSubmit(event) {
     event.preventDefault();
 
-    const { token } = login(values);
+    const { user, password } = values;
 
-    if (token) {
-      setToken(token);
-      return history.push('/');
-    }
+    await handleLogin(user, password);
 
     setValues(initialState);
   };
