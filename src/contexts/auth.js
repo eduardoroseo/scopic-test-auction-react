@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import App from "../components/layouts/App";
 import { api } from "../utils/api";
 
 const AuthContext = createContext({
@@ -70,7 +71,9 @@ export const AuthProvider = ({ children }) => {
         getDataUser,
       }}
     >
-      {children}
+      {!authToken ? children : (
+        <App children={children} />
+      )}
     </AuthContext.Provider>
   );
 };

@@ -31,7 +31,6 @@ const HomePage = () => {
   // }
 
   return (
-    <Container className="mt-4">
       <Row>
         {items.map((item) => (
           <Col xs="12" sm="6" md="3" lg="3" key={item.id}>
@@ -43,7 +42,6 @@ const HomePage = () => {
           </Col>
         ))}
       </Row>
-    </Container>
   );
 };
 

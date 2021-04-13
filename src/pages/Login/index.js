@@ -1,7 +1,21 @@
-import React, { useState } from 'react';
-import { Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label, Row } from 'reactstrap';
-import { api } from '../../utils/api';
-import { useAuth } from '../../contexts/auth';
+import React, { useState } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Form,
+  FormFeedback,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Row,
+} from "reactstrap";
+import { api } from "../../utils/api";
+import { useAuth } from "../../contexts/auth";
 
 function initialState() {
   return { user: "user@scopic-auction.com", password: "password" };
@@ -18,7 +32,7 @@ const LoginPage = () => {
       ...values,
       [name]: value,
     });
-  };
+  }
 
   async function onSubmit(event) {
     event.preventDefault();
@@ -28,7 +42,7 @@ const LoginPage = () => {
     api
       .post("login", {
         email: user,
-        password
+        password,
       })
       .then(({ data }) => {
         saveAuthToken(data);
@@ -36,7 +50,7 @@ const LoginPage = () => {
       .catch(() => {
         setInvalid(true);
       });
-  };
+  }
 
   return (
     <Container>
@@ -49,25 +63,42 @@ const LoginPage = () => {
                 <FormGroup>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                      <InputGroupText><i className="fa fa-user"></i></InputGroupText>
+                      <InputGroupText>
+                        <i className="fa fa-user"></i>
+                      </InputGroupText>
                     </InputGroupAddon>
-                    <Input type="email" id="email" name="email" onChange={onChange} value={values.user}/>
+                    <Input
+                      type="email"
+                      id="email"
+                      name="email"
+                      onChange={onChange}
+                      value={values.user}
+                    />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                      <InputGroupText><i className="fa fa-key"></i></InputGroupText>
+                      <InputGroupText>
+                        <i className="fa fa-key"></i>
+                      </InputGroupText>
                     </InputGroupAddon>
-                    <Input invalid={invalid} type="password" id="password" name="password" onChange={onChange} value={values.password}/>
-                    <FormFeedback>Oh noes! User or password is invalid!</FormFeedback>
+                    <Input
+                      invalid={invalid}
+                      type="password"
+                      id="password"
+                      name="password"
+                      onChange={onChange}
+                      value={values.password}
+                    />
+                    <FormFeedback>
+                      Oh noes! User or password is invalid!
+                    </FormFeedback>
                   </InputGroup>
                 </FormGroup>
                 <FormGroup check>
                   <Col>
-                    <Button className="btn-block">
-                      Sign In
-                    </Button>
+                    <Button className="btn-block">Sign In</Button>
                   </Col>
                 </FormGroup>
               </Form>
