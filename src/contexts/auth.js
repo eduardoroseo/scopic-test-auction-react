@@ -32,6 +32,15 @@ export const AuthProvider = ({ children }) => {
         }
 
         setAuthToken(data);
+        api.interceptors.response.use(undefined, async (err) => {
+          const error = err.response;
+    
+          if (error.status === 401) {
+            logout();
+          }
+    
+          return Promise.reject(error);
+        });
       }
 
       setLoading(false);

@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/auth";
 import { api } from "../../utils/api";
-import { Col, Container, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import CardItem from "../../components/CardItem";
+import ItemsPagination from "../../components/ItemsPagination";
 
 const HomePage = () => {
-  const { loadingApi } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
-  // const [paginationData, setPaginationData] = useState({});
+  const [paginationData, setPaginationData] = useState({});
 
   useEffect(() => {
-    if (!loadingApi) {
       (async () => {
         await api
           .get(`/items?page=${currentPage}`)
           .then(({ data }) => {
             setItems(data.data);
+            setPaginationData(data)
           })
           .catch(() => {
             setItems([]);
           });
-        // setPaginationData(data);
       })()
-    }
-  }, [currentPage, loadingApi]);
+  }, [currentPage]);
 
-  // const changePage = (page) => {
-  //     setCurrentPage(page);
-  // }
+  const changePage = (page) => {
+      setCurrentPage(page);
+  }
 
   return (
+    <>
       <Row>
         {items.map((item) => (
           <Col xs="12" sm="6" md="3" lg="3" key={item.id}>
@@ -42,6 +40,14 @@ const HomePage = () => {
           </Col>
         ))}
       </Row>
+      {
+        items.length > 0 ?
+          <Row className="justify-content-center">
+            <ItemsPagination handleChangeCurrentPage={changePage} {...paginationData} />
+          </Row> :
+          ''
+      }
+    </>
   );
 };
 
