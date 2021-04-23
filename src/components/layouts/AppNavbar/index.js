@@ -4,7 +4,7 @@ import Menu from "../Menu";
 
 export default function AppNavbar() {
   return (
-    <Navbar color="dark" dark expand="md">
+    <Navbar color="dark" dark expand="sm">
       <NavbarBrand href="/">Auction - Antique Items</NavbarBrand>
       <Menu />
     </Navbar>
