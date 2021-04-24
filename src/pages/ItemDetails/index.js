@@ -11,6 +11,7 @@ import {
   Row,
 } from "reactstrap";
 import { api } from "../../utils/api";
+import CountdownItem from "./CountdownItem";
 import SubmitBidForm from "./SubmitBidForm";
 
 const ItemDetails = () => {
@@ -18,6 +19,8 @@ const ItemDetails = () => {
 
   const [item, setItem] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const [disableFields, setDisableFields] = useState(false);
 
   useEffect(() => {
     if (!item.id) {
@@ -29,6 +32,8 @@ const ItemDetails = () => {
         .finally(() => setLoading(false));
     }
   }, [item, item_id]);
+
+  const onItemExpiration = () => { setDisableFields(true) };
 
   return (
     <Row className="justify-content-center">
@@ -66,8 +71,9 @@ const ItemDetails = () => {
               <b>Description:</b>
             </CardText>
             <CardText>{item.description}</CardText>
+            <CountdownItem callbackOnCompleted={onItemExpiration} time={item.bid_expiration} />
             <hr />
-            <SubmitBidForm item={item} />
+            <SubmitBidForm item={item} disableFields={disableFields} />
           </CardBody>
         </Card>
       </Col>

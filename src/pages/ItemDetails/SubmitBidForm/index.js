@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import CurrencyInput from "../../../components/layouts/CurrencyInput";
 
-const SubmitBidForm = ({ item }) => {
+const SubmitBidForm = ({ item, disableFields = false }) => {
   const [bidPrice, setBidPrice] = useState(null);
 
   useEffect(() => {
@@ -44,12 +44,14 @@ const SubmitBidForm = ({ item }) => {
               className="form-control"
               name="bid_price"
               onChange={changeInputBidPrice}
+              disabled={disableFields}
               required
             />
             <InputGroupAddon addonType="append">
               <Button
                 size="sm"
                 color="success"
+                disabled={disableFields}
                 onClick={() => setBidPrice(bidPrice + 1)}
               >
                 <i className="fa fa-plus"></i>
@@ -59,6 +61,7 @@ const SubmitBidForm = ({ item }) => {
               <Button
                 size="sm"
                 color="danger"
+                disabled={disableFields}
                 onClick={() => setTreatedBidPrice(bidPrice - 1)}
               >
                 <i className="fa fa-minus"></i>
@@ -69,12 +72,12 @@ const SubmitBidForm = ({ item }) => {
       </FormGroup>
       <FormGroup check>
         <Label check>
-          <Input type="checkbox" /> Enable Auto-bidding
+          <Input disabled={disableFields} type="checkbox" /> Enable Auto-bidding
         </Label>
       </FormGroup>
       <br />
       <CardText>
-        <Button size="sm">Submit Bid</Button>
+        <Button disabled={disableFields} size="sm">Submit Bid</Button>
       </CardText>
     </>
   );
