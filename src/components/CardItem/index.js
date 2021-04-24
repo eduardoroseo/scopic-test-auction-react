@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardBody, CardText, CardTitle } from "reactstrap";
+import { Button, Card, CardBody, CardText, CardTitle } from "reactstrap";
 
 const CardItem  = (props) => {
     const { title, description, price } = props;
@@ -12,6 +12,9 @@ const CardItem  = (props) => {
                 </CardTitle>
                 <CardText className="small">{description}</CardText>
                 <CardText>{price}$</CardText>
+                <CardText>
+                    <Button size='sm'>Bid Now <i className="fa fa-shopping-cart"></i></Button>
+                </CardText>
             </CardBody>
         </Card>
     );
