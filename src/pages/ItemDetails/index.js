@@ -22,18 +22,20 @@ const ItemDetails = () => {
 
   const [disableFields, setDisableFields] = useState(false);
 
-  useEffect(() => {
-    if (!item.id) {
-      api
-        .get(`items/${item_id}`)
-        .then(({ data }) => {
-          setItem(data.content);
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [item, item_id]);
+  const getItemData = () => {
+    api
+      .get(`items/${item_id}`)
+      .then(({ data }) => {
+        setItem(data.content);
+      })
+      .finally(() => setLoading(false));
+  };
 
-  const onItemExpiration = () => { setDisableFields(true) };
+  useEffect(getItemData, [item_id]);
+
+  const onItemExpiration = () => {
+    setDisableFields(true);
+  };
 
   return (
     <Row className="justify-content-center">
@@ -43,16 +45,6 @@ const ItemDetails = () => {
             <h5>Item Details</h5>
           </CardHeader>
           <CardBody>
-            {/* <SweetAlert
-              show={feedbackMessage.message !== ""}
-              title={feedbackMessage.type === "success" ? "Success" : "Warning"}
-              type={
-                feedbackMessage.type === "" ? "default" : feedbackMessage.type
-              }
-              onConfirm={() => setFeedbackMessage(initialFeedBackMessage)}
-            >
-              {feedbackMessage.message}
-            </SweetAlert> */}
             <Progress
               bar
               animated
@@ -71,9 +63,12 @@ const ItemDetails = () => {
               <b>Description:</b>
             </CardText>
             <CardText>{item.description}</CardText>
-            <CountdownItem callbackOnCompleted={onItemExpiration} time={item.bid_expiration} />
+            <CountdownItem
+              callbackOnCompleted={onItemExpiration}
+              time={item.bid_expiration}
+            />
             <hr />
-            <SubmitBidForm item={item} disableFields={disableFields} />
+            <SubmitBidForm refreshItemData={getItemData} item={item} disableFields={disableFields} />
           </CardBody>
         </Card>
       </Col>

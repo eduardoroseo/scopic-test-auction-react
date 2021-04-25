@@ -9,10 +9,20 @@ import {
   InputGroupAddon,
   Label,
 } from "reactstrap";
+import FeedbackMessage from "../../../components/FeedbackMessage";
 import CurrencyInput from "../../../components/layouts/CurrencyInput";
+import { api } from "../../../utils/api";
 
-const SubmitBidForm = ({ item, disableFields = false }) => {
+const SubmitBidForm = ({ refreshItemData, item, disableFields = false }) => {
   const [bidPrice, setBidPrice] = useState(null);
+  const [enableAutoBid, setEnableAutoBid] = useState(false);
+  const [loadingBid, setLoadingBid] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [feedback, setFeedback] = useState({
+    message: "",
+    type: "",
+    show: false,
+  });
 
   useEffect(() => {
     setBidPrice(item.price || null);
@@ -23,7 +33,7 @@ const SubmitBidForm = ({ item, disableFields = false }) => {
 
     const bidPrice = value.replace("$", "").replace(",", "");
 
-    setTreatedBidPrice(parseFloat(bidPrice));
+    setTreatedBidPrice(parseFloat(bidPrice || 0));
   };
 
   const setTreatedBidPrice = (price) => {
@@ -31,8 +41,43 @@ const SubmitBidForm = ({ item, disableFields = false }) => {
     setBidPrice(newPrice);
   };
 
+  const handleAutoBidding = (event) => {
+    const { checked } = event.target;
+    setEnableAutoBid(checked);
+  };
+
+  const handleDisabled = () => disableFields || loadingBid || !bidPrice;
+
+  const handleBid = () => {
+    setLoadingBid(true);
+
+    api
+      .post(`items/${item.id}/bid`, {
+        bid_price: bidPrice,
+        auto_bidding: enableAutoBid,
+      })
+      .then(() => {
+        setErrors([]);
+        setFeedback({ message: "Bid Accepted", type: "success", show: true });
+      })
+      .catch(({ data: { errors, message } }) => {
+        setErrors(errors);
+        setFeedback({ message, type: "danger", show: true });
+      })
+      .finally(() => {
+        refreshItemData();
+        setLoadingBid(false);
+      });
+  };
+
   return (
     <>
+      <FeedbackMessage
+        message={feedback.message}
+        type={feedback.type}
+        onConfirm={() => setFeedback({ ...feedback, show: false })}
+        show={feedback.show}
+      />
       <FormGroup row>
         <Label for="bid_price" sm={3}>
           Bid Price
@@ -41,17 +86,20 @@ const SubmitBidForm = ({ item, disableFields = false }) => {
           <InputGroup>
             <CurrencyInput
               value={bidPrice}
-              className="form-control"
+              className={
+                "form-control " + (errors["bid_price"] ? "is-invalid" : "")
+              }
+              aria-invalid={errors["bid_price"] !== undefined}
               name="bid_price"
               onChange={changeInputBidPrice}
-              disabled={disableFields}
+              disabled={handleDisabled()}
               required
             />
             <InputGroupAddon addonType="append">
               <Button
                 size="sm"
                 color="success"
-                disabled={disableFields}
+                disabled={handleDisabled()}
                 onClick={() => setBidPrice(bidPrice + 1)}
               >
                 <i className="fa fa-plus"></i>
@@ -61,23 +109,37 @@ const SubmitBidForm = ({ item, disableFields = false }) => {
               <Button
                 size="sm"
                 color="danger"
-                disabled={disableFields}
+                disabled={handleDisabled()}
                 onClick={() => setTreatedBidPrice(bidPrice - 1)}
               >
                 <i className="fa fa-minus"></i>
               </Button>
             </InputGroupAddon>
+            {errors["bid_price"] !== undefined
+              ? errors["bid_price"].map((message, key) => (
+                  <div className="invalid-feedback" key={key}>
+                    {message}
+                  </div>
+                ))
+              : ""}
           </InputGroup>
         </Col>
       </FormGroup>
       <FormGroup check>
         <Label check>
-          <Input disabled={disableFields} type="checkbox" /> Enable Auto-bidding
+          <Input
+            disabled={handleDisabled()}
+            onChange={handleAutoBidding}
+            type="checkbox"
+          />{" "}
+          Enable Auto-bidding
         </Label>
       </FormGroup>
       <br />
       <CardText>
-        <Button disabled={disableFields} size="sm">Submit Bid</Button>
+        <Button onClick={handleBid} disabled={handleDisabled()} size="sm">
+          Submit Bid
+        </Button>
       </CardText>
     </>
   );
