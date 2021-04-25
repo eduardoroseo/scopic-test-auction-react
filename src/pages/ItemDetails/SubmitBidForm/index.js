@@ -131,8 +131,17 @@ const SubmitBidForm = ({ refreshItemData, item, disableFields = false }) => {
             disabled={handleDisabled()}
             onChange={handleAutoBidding}
             type="checkbox"
+            className={errors["auto_bidding"] ? "is-invalid" : ""}
+            aria-invalid={errors["auto_bidding"] !== undefined}
           />{" "}
           Enable Auto-bidding
+          {errors["auto_bidding"] !== undefined
+              ? errors["auto_bidding"].map((message, key) => (
+                  <div className="invalid-feedback" key={key}>
+                    {message}
+                  </div>
+                ))
+              : ""}
         </Label>
       </FormGroup>
       <br />

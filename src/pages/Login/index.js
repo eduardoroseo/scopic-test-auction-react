@@ -18,7 +18,7 @@ import { api } from "../../utils/api";
 import { useAuth } from "../../contexts/auth";
 
 function initialState() {
-  return { user: "user@scopic-auction.com", password: "password" };
+  return { email: "user@scopic-auction.com", password: "password" };
 }
 
 const LoginPage = () => {
@@ -37,11 +37,11 @@ const LoginPage = () => {
   async function onSubmit(event) {
     event.preventDefault();
 
-    const { user, password } = values;
+    const { email, password } = values;
 
     api
       .post("login", {
-        email: user,
+        email,
         password,
       })
       .then(({ data }) => {
@@ -72,7 +72,7 @@ const LoginPage = () => {
                       id="email"
                       name="email"
                       onChange={onChange}
-                      value={values.user}
+                      defaultValue={values.email}
                     />
                   </InputGroup>
                 </FormGroup>
@@ -89,7 +89,7 @@ const LoginPage = () => {
                       id="password"
                       name="password"
                       onChange={onChange}
-                      value={values.password}
+                      defaultValue={values.password}
                     />
                     <FormFeedback>
                       Oh noes! User or password is invalid!

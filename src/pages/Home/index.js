@@ -8,7 +8,7 @@ import Filter from "./Filter";
 const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
-  const [searchFilter, setSearchFilter] = useState(null);
+  const [searchFilter, setSearchFilter] = useState(undefined);
   const [sortFilter, setSortFilter] = useState(null);
   const [paginationData, setPaginationData] = useState({});
   const [loadingList, setLoadingList] = useState(false);

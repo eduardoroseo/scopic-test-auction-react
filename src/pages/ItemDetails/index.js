@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import { api } from "../../utils/api";
 import CountdownItem from "./CountdownItem";
+import Holder from "./Holder";
 import SubmitBidForm from "./SubmitBidForm";
 
 const ItemDetails = () => {
@@ -67,6 +68,7 @@ const ItemDetails = () => {
               callbackOnCompleted={onItemExpiration}
               time={item.bid_expiration}
             />
+            <Holder holder={item.buyer} />
             <hr />
             <SubmitBidForm refreshItemData={getItemData} item={item} disableFields={disableFields} />
           </CardBody>

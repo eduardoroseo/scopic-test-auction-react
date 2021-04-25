@@ -23,7 +23,7 @@ const Filter = ({
       changeSearchFilter(value);
     }
 
-    if (!value) changeSearchFilter(value);
+    if (!value) changeSearchFilter('');
   };
 
   const handleClickSortButton = () => {
@@ -51,12 +51,12 @@ const Filter = ({
             onChange={handleChangeSearchFilter}
             placeholder="Search by name"
             disabled={loadingList}
-            value={searchFilter}
+            defaultValue={searchFilter}
           />
           <InputGroupAddon hidden={!searchFilter} addonType="append">
             <Button
               outline
-              onClick={() => changeSearchFilter(null)}
+              onClick={() => changeSearchFilter(undefined)}
               color="default"
               disabled={loadingList}
             >
