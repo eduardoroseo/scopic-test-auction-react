@@ -1,34 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../../utils/api";
-import { Col, Row } from "reactstrap";
+import { Col, Row, Spinner } from "reactstrap";
 import CardItem from "../../components/CardItem";
 import ItemsPagination from "../../components/ItemsPagination";
+import Filter from "./Filter";
 
 const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState([]);
+  const [searchFilter, setSearchFilter] = useState(undefined);
+  const [sortFilter, setSortFilter] = useState(null);
   const [paginationData, setPaginationData] = useState({});
+  const [loadingList, setLoadingList] = useState(false);
 
   useEffect(() => {
-      (async () => {
-        await api
-          .get(`/items?page=${currentPage}`)
-          .then(({ data }) => {
-            setItems(data.data);
-            setPaginationData(data)
-          })
-          .catch(() => {
-            setItems([]);
-          });
-      })()
-  }, [currentPage]);
+    setLoadingList(true);
+    (async () => {
+      const search = searchFilter ? `&search=${searchFilter}` : "";
+      const sort = sortFilter ? `&orderByPrice=${sortFilter}` : "";
 
-  const changePage = (page) => {
-      setCurrentPage(page);
-  }
+      await api
+        .get(`/items?page=${currentPage}${search}${sort}`)
+        .then(({ data }) => {
+          setItems(data.data);
+          setPaginationData(data);
+        })
+        .catch(() => {
+          setItems([]);
+        })
+        .finally(() => setLoadingList(false));
+    })();
+  }, [currentPage, searchFilter, sortFilter]);
 
-  return (
-    <>
+  const changePage = (page) => setCurrentPage(page);
+  const changeSearchFilter = (search) => setSearchFilter(search);
+  const changeSortFilter = (sort) => setSortFilter(sort);
+
+  const renderList = () => {
+    return loadingList ? (
+      <Row className="justify-content-center mt-5">
+        <Spinner></Spinner>
+      </Row>
+    ) : (
       <Row>
         {items.map((item) => (
           <Col xs="12" sm="6" md="3" lg="3" key={item.id}>
@@ -36,17 +49,34 @@ const HomePage = () => {
               title={item.name}
               description={item.description}
               price={item.price}
+              id={item.id}
             />
           </Col>
         ))}
       </Row>
-      {
-        items.length > 0 ?
-          <Row className="justify-content-center">
-            <ItemsPagination handleChangeCurrentPage={changePage} {...paginationData} />
-          </Row> :
-          ''
-      }
+    );
+  };
+
+  return (
+    <>
+      <Filter
+        changeSearchFilter={changeSearchFilter}
+        searchFilter={searchFilter}
+        changeSortFilter={changeSortFilter}
+        sortFilter={sortFilter}
+        loadingList={loadingList}
+      />
+      {renderList()}
+      {!loadingList && items.length > 0 ? (
+        <Row className="justify-content-center">
+          <ItemsPagination
+            handleChangeCurrentPage={changePage}
+            {...paginationData}
+          />
+        </Row>
+      ) : (
+        ""
+      )}
     </>
   );
 };
