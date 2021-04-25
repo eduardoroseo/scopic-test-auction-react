@@ -4,12 +4,14 @@ import {
   Card,
   CardBody,
   CardHeader,
+  CardImg,
   CardText,
   CardTitle,
   Col,
   Progress,
   Row,
 } from "reactstrap";
+import ItemImg from "../../components/ItemImg";
 import { api } from "../../utils/api";
 import CountdownItem from "./CountdownItem";
 import Holder from "./Holder";
@@ -45,6 +47,7 @@ const ItemDetails = () => {
           <CardHeader>
             <h5>Item Details</h5>
           </CardHeader>
+          <ItemImg hidden={loading} picture={item.picture} />
           <CardBody>
             <Progress
               bar

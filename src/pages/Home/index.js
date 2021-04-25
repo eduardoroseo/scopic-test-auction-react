@@ -50,6 +50,7 @@ const HomePage = () => {
               description={item.description}
               price={item.price}
               id={item.id}
+              picture={item.picture}
             />
           </Col>
         ))}
