@@ -1,11 +1,18 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { Button, Card, CardBody, CardText, CardTitle } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardText,
+  CardTitle,
+} from "reactstrap";
+import ItemImg from "../ItemImg";
 
 const CardItem = (props) => {
   const history = useHistory();
 
-  const { id, title, description, price } = props;
+  const { id, title, description, price, picture } = props;
 
   const openDetails = () => {
     history.push(`/itemDetails/${id}`);
@@ -13,6 +20,7 @@ const CardItem = (props) => {
 
   return (
     <Card className="mb-3">
+      <ItemImg picture={picture} />
       <CardBody className="text-center">
         <CardTitle>
           <h5>{title}</h5>
